@@ -6,7 +6,7 @@ const htmlRewritePlugin = require('./plugins/server/htmlRewritePlugin');
 const vueServerPlugin = require('./plugins/server/vueServerPlugin')
 
 module.exports = function createServer() {
-    const app = new Koa();
+    const app = new Koa();  
     const root = process.cwd();
     const context = {
         app,
