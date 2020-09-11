@@ -16,7 +16,7 @@ module.exports = function createServer() {
         // 重写html，插入需要的代码
         htmlRewritePlugin,
         // 重写模块路径
-        // rewriteModulePlugin,
+        rewriteModulePlugin,
         // 解析.vue文件
         vueServerPlugin,
         // 解析模块路径
