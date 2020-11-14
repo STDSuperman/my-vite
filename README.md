@@ -22,7 +22,7 @@
 
 ## 基本架构
 
-![系统架构图](//p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ed6a083356014c4c87b59b4cfb9520a6~tplv-k3u1fbpfcp-zoom-1.image)
+![系统架构图](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ed6a083356014c4c87b59b4cfb9520a6~tplv-k3u1fbpfcp-zoom-1.image)
 
 简易版的`vite`大体结构如上，按照整个流程，我们需要逐一实现这些中间件，实现一个`vite`开发工具。
 
@@ -61,11 +61,11 @@ $ npm run dev
 
 我们点开`main.js`，这个时候你会发现，和我们写的实际代码几乎没有区别，唯一改变的就是部分导入的模块路径被修改了。
 
-![image-20200909223433589](//p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7d50e044706e4329907106d1d2a263a1~tplv-k3u1fbpfcp-zoom-1.image)
+![image-20200909223433589](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7d50e044706e4329907106d1d2a263a1~tplv-k3u1fbpfcp-zoom-1.image)
 
 不仅如此，从其他请求中我们也可以看出每一个`.vue`文件都被拆分成了多个请求，并通过`type`来标识是`template`还是`style`。
 
-![image-20200909223250307](//p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/86475c6eb58e47b993dfe7f374c0227b~tplv-k3u1fbpfcp-zoom-1.image)
+![image-20200909223250307](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/86475c6eb58e47b993dfe7f374c0227b~tplv-k3u1fbpfcp-zoom-1.image)
 
 综上所述，我们可以知道，`vite`在这里做了两件事，第一是修改了模块请求路径，第二就是将`.vue`文件进行解析拆分。
 
@@ -181,7 +181,7 @@ module.exports = function createServer() {
 
 这是因为我们在使用`import`方式导入模块的时候，浏览器只能识别`./`、`../`、`/`这种开头的路径，对于直接使用模块名比如：`import vue from 'vue'`，浏览器就会报错，因为它无法识别这种路径，这就是我们需要进行处理的地方了。
 
-![](//p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3d2f9094422c4096902f0f1952890c3f~tplv-k3u1fbpfcp-zoom-1.image)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3d2f9094422c4096902f0f1952890c3f~tplv-k3u1fbpfcp-zoom-1.image)
 
 我们先在创建对应的文件`plugins/server/rewriteModulePlugin.js`，并在`index.js`中引入，引入方式同上：
 
@@ -373,7 +373,7 @@ function resolveVue(root) {
 
 > 为什么需要对`vue`的这些模块单独处理一下呢，因为我们在导入`vue`的时候，它的内部会去导这几个核心包，如果不预先进行解析，就无法找到这几个模块的位置，导致项目运行错误。
 
-![image-20200910210115834](//p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f22947c82c934ae9aa6c4dc7ec2dc597~tplv-k3u1fbpfcp-zoom-1.image)
+![image-20200910210115834](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f22947c82c934ae9aa6c4dc7ec2dc597~tplv-k3u1fbpfcp-zoom-1.image)
 
 点开图中`vue`这个模块返回的内容我们可以看到，这几个核心模块都是被包含了的。
 
@@ -381,7 +381,7 @@ function resolveVue(root) {
 
 接下来我们还需要关注一个问题，对于一般的项目来说，我们经常会去使用`process.env`去判断环境，而如果你采用脚手架工具进行开发时`webpack`会来帮我们做这件事，所以在`vite`中我们也需要对它进行一个处理，如果没有这项处理你在运行项目时就会看到这样的报错：
 
-![image-20200910210543937](//p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b1dcce6c86a94724bc79b12fb0ad0133~tplv-k3u1fbpfcp-zoom-1.image)
+![image-20200910210543937](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b1dcce6c86a94724bc79b12fb0ad0133~tplv-k3u1fbpfcp-zoom-1.image)
 
 它会告诉我们`process`这个变量并没有被定义，所以说我们需要在客户端注入相关的代码。
 
@@ -459,7 +459,7 @@ const resolvePlugins = [
 
 在详细研究内部实现之前，我们先需要明确一下需要把它处理成什么样子，这里我们同样打开我们的`vue3`项目地址，找到它对`App.vue`的返回结果：
 
-![image-20200910212716080](//p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a091b93adfdb4143824f0841b373555f~tplv-k3u1fbpfcp-zoom-1.image)
+![image-20200910212716080](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a091b93adfdb4143824f0841b373555f~tplv-k3u1fbpfcp-zoom-1.image)
 
 这里将一个单文件组件分为了几个部分，一个是`script`部分，用一个对象保存，并在下方给该对象添加`render`方法，最后导出这个对象，而这个`render`方法是从导入的，其实它本质上就是获取在服务端解析好的用于渲染单文件组件中`template`标签下的内容的渲染函数。
 
@@ -625,7 +625,7 @@ if (ctx.query.type === 'template') {
 
 正如尤大在推特所说：
 
-![](//p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5502698906fc4a74abef3ab9ea839059~tplv-k3u1fbpfcp-zoom-1.image)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5502698906fc4a74abef3ab9ea839059~tplv-k3u1fbpfcp-zoom-1.image)
 
 这可能将时一场新的变革，它对比与`webpack`来说解决了我们在开发过程中静态打包过程，是值得我们去持续关注它的进展，伴随着`vue3`得 推出，`vite`的迭代也是飞速增长，虽然说在一定程度上还未达到能够支持大型项目的程度，但年轻的`vite`最大的优点莫过于它的潜力，虽然`vite`诞生并不久，但是它的理念在一定程度上可能更加符合开发人员的需求。
 
