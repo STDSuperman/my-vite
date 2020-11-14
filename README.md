@@ -7,9 +7,9 @@
 
 带着这样的痛点，我们来看看`Vite`给我们带来了什么。
 
-## Vite是什么
+## Vite 是什么
 
-`Vite` 是一个由原生` ESM` 驱动的 `Web` 开发构建工具。在开发环境下基于浏览器原生` ES imports` 开发，在生产环境下基于` Rollup `打包。
+`Vite` 是一个由原生`ESM` 驱动的 `Web` 开发构建工具。在开发环境下基于浏览器原生`ES imports` 开发，在生产环境下基于`Rollup`打包。
 
 它主要具有以下特点：
 
@@ -22,15 +22,15 @@
 
 ## 基本架构
 
-![基本架构](https://s1.ax1x.com/2020/10/17/0LrF3T.png)
+![系统架构图](//p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ed6a083356014c4c87b59b4cfb9520a6~tplv-k3u1fbpfcp-zoom-1.image)
 
 简易版的`vite`大体结构如上，按照整个流程，我们需要逐一实现这些中间件，实现一个`vite`开发工具。
 
 图中的目标项目即我们开发时的项目，`vite`服务在解析模块路径以及读取文件内容时需要访问目标项目中的模块内容或者配置文件等。
 
-完整项目代码地址：[`mini-vite`](https://github.com/STDSuperman/my-vite)
+完整项目代码地址：[https://github.com/STDSuperman/my-vite](https://github.com/STDSuperman/my-vite)
 
-## 走进Vite原理分析
+## 走进 Vite 原理分析
 
 在开始手撸代码之前，我们先来看看`Vite`如何使用。
 
@@ -61,15 +61,15 @@ $ npm run dev
 
 我们点开`main.js`，这个时候你会发现，和我们写的实际代码几乎没有区别，唯一改变的就是部分导入的模块路径被修改了。
 
-![image-20200909223433589](https://s1.ax1x.com/2020/09/11/wYgjfA.png)
+![image-20200909223433589](//p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7d50e044706e4329907106d1d2a263a1~tplv-k3u1fbpfcp-zoom-1.image)
 
 不仅如此，从其他请求中我们也可以看出每一个`.vue`文件都被拆分成了多个请求，并通过`type`来标识是`template`还是`style`。
 
-![image-20200909223250307](https://s1.ax1x.com/2020/09/11/wYgbwD.png)
+![image-20200909223250307](//p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/86475c6eb58e47b993dfe7f374c0227b~tplv-k3u1fbpfcp-zoom-1.image)
 
 综上所述，我们可以知道，`vite`在这里做了两件事，第一是修改了模块请求路径，第二就是将`.vue`文件进行解析拆分。
 
-> 上面描述的两件事只是本文会进行详细讲解的有关于`Vite`实现的部分，而不是说`Vite`只干了这两件事👀，`Vite`的功能还是十分强大的。
+> 上面描述的两件事只是本文会进行详细讲解的有关于`Vite`实现的部分，而不是说`Vite`只干了这两件事 👀，`Vite`的功能还是十分强大的。
 
 ### 开始
 
@@ -124,8 +124,6 @@ module.exports = function createServer() {
     return app;
 }
 ```
-
-
 
 先移除不必要的代码，我们就能清晰看出来，这里使用了`koa`来启动一个简单服务，接下来我们开始逐一实现`vite`的能力。
 
@@ -183,7 +181,7 @@ module.exports = function createServer() {
 
 这是因为我们在使用`import`方式导入模块的时候，浏览器只能识别`./`、`../`、`/`这种开头的路径，对于直接使用模块名比如：`import vue from 'vue'`，浏览器就会报错，因为它无法识别这种路径，这就是我们需要进行处理的地方了。
 
-![](https://s1.ax1x.com/2020/09/11/wt9pwT.png)
+![](//p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3d2f9094422c4096902f0f1952890c3f~tplv-k3u1fbpfcp-zoom-1.image)
 
 我们先在创建对应的文件`plugins/server/rewriteModulePlugin.js`，并在`index.js`中引入，引入方式同上：
 
@@ -335,8 +333,6 @@ module.exports = function({ app, root }) {
 
 先来看它的导出方法，从整个结构来看其实也比较好理解，首先正则匹配请求路径，如果是`/@modules`开头就进行后续处理，否则就跳过，并设置响应类型为`js`，读取真实模块路径内容，返回给客户端。这里重点应该在于怎么去获取模块真实路径，也就是代码中`resolveVue`需要做的事情，它会解析出一个真实路径与模块名的映射关系，我们就能通过模块名直接拿到真实路径。
 
-
-
 ```js
 // moduleResolvePlugin.js
 const path = require('path');
@@ -365,9 +361,9 @@ function resolveVue(root) {
 }
 ```
 
-正如注释中写道，`vue3`几个比较核心的包有：`runtime-core ` 、`runtime-dom` 、`reactivity` 、` shared`，以及编译`.vue`需要用到的`compiler-sfc`，因为对`vue`单文件解析将由服务端进行处理。
+正如注释中写道，`vue3`几个比较核心的包有：`runtime-core` 、`runtime-dom` 、`reactivity` 、`shared`，以及编译`.vue`需要用到的`compiler-sfc`，因为对`vue`单文件解析将由服务端进行处理。
 
->  这里主要是处理`Vue3`相关的几个核心模块，暂时没有处理其他第三方模块，需要后续对第三方模块也进行解析，其实也比较简单，找出他们在`node_modules`中的入口文件，一般来说都是有规律的，之后只要接收到相关模块的请求就能进行统一读取返回了。
+> 这里主要是处理`Vue3`相关的几个核心模块，暂时没有处理其他第三方模块，需要后续对第三方模块也进行解析，其实也比较简单，找出他们在`node_modules`中的入口文件，一般来说都是有规律的，之后只要接收到相关模块的请求就能进行统一读取返回了。
 
 然后我们来看解析过程，由于`compiler-sfc`模块位置与其他几个不一样，所以先单独处理，首先拿到它对应的描述文件`package.json`，通过`main`字段就能知道它的入口文件是哪个：`node_modules/@vue/compiler-sfc/package.json`，然后拼接一下`package.json`所在目录，就能拿到该模块的真实路径了。
 
@@ -377,7 +373,7 @@ function resolveVue(root) {
 
 > 为什么需要对`vue`的这些模块单独处理一下呢，因为我们在导入`vue`的时候，它的内部会去导这几个核心包，如果不预先进行解析，就无法找到这几个模块的位置，导致项目运行错误。
 
-![image-20200910210115834](https://s1.ax1x.com/2020/09/11/wYgXYd.png)
+![image-20200910210115834](//p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f22947c82c934ae9aa6c4dc7ec2dc597~tplv-k3u1fbpfcp-zoom-1.image)
 
 点开图中`vue`这个模块返回的内容我们可以看到，这几个核心模块都是被包含了的。
 
@@ -385,7 +381,7 @@ function resolveVue(root) {
 
 接下来我们还需要关注一个问题，对于一般的项目来说，我们经常会去使用`process.env`去判断环境，而如果你采用脚手架工具进行开发时`webpack`会来帮我们做这件事，所以在`vite`中我们也需要对它进行一个处理，如果没有这项处理你在运行项目时就会看到这样的报错：
 
-![image-20200910210543937](https://s1.ax1x.com/2020/09/11/wYgqTe.png)
+![image-20200910210543937](//p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b1dcce6c86a94724bc79b12fb0ad0133~tplv-k3u1fbpfcp-zoom-1.image)
 
 它会告诉我们`process`这个变量并没有被定义，所以说我们需要在客户端注入相关的代码。
 
@@ -417,7 +413,7 @@ const { readBody } = require('./utils')
 // 用于处理项目获取环境变量报错问题
 module.exports = function ({ root, app }) {
     const inject = `
-        <script>
+        <script type='text/javasript'>
             window.process = {
                 env: {
                     NODE_ENV: 'development'
@@ -463,7 +459,7 @@ const resolvePlugins = [
 
 在详细研究内部实现之前，我们先需要明确一下需要把它处理成什么样子，这里我们同样打开我们的`vue3`项目地址，找到它对`App.vue`的返回结果：
 
-![image-20200910212716080](https://s1.ax1x.com/2020/09/11/wYgOFH.png)
+![image-20200910212716080](//p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a091b93adfdb4143824f0841b373555f~tplv-k3u1fbpfcp-zoom-1.image)
 
 这里将一个单文件组件分为了几个部分，一个是`script`部分，用一个对象保存，并在下方给该对象添加`render`方法，最后导出这个对象，而这个`render`方法是从导入的，其实它本质上就是获取在服务端解析好的用于渲染单文件组件中`template`标签下的内容的渲染函数。
 
@@ -529,7 +525,7 @@ if (!ctx.query.type) {
 
 自顶向下看，定义一个`code`变量，用于后续代码拼接。外层先会判断是否是被处理过的请求（被处理后的请求都会存在`query`参数），然后判断`descriptor`上有没有`script`属性（也就是单文件组件中是否存在 `script`标签），如果存在则给`code`变量添加相关代码。
 
->  我们在看它的处理代码部分前，最好再回想一下我们上面介绍过的一个`vue`组件需要被处理成什么样，
+> 我们在看它的处理代码部分前，最好再回想一下我们上面介绍过的一个`vue`组件需要被处理成什么样，
 
 首先拿到解析后的内容，它是一个以`export default`开头的串，所以我们为了达到`vite`处理后的结果，就需要把它替换一下，用一个变量来保存，过程大致如下：
 
@@ -577,7 +573,7 @@ const { readBody } = require('./utils')
 // 用于处理项目获取环境变量报错问题
 module.exports = function ({ root, app }) {
     const inject = `
-        <script>
+        <script type='text/javasript'>
             window.process = {
                 env: {
                     NODE_ENV: 'development'
@@ -603,7 +599,7 @@ module.exports = function ({ root, app }) {
 
 这里的实现实际上十分简单，就直接创建一个`style`标签并添加到`head`头中即可，这样就能让相关`css`生效了。
 
-> 这里主要还是为了先简化逻辑，对于`css`的处理变成`mini`版了👍。
+> 这里主要还是为了先简化逻辑，对于`css`的处理变成`mini`版了 👍。
 
 最后就只剩下处理`template`类型请求了：
 
@@ -621,7 +617,7 @@ if (ctx.query.type === 'template') {
 
 自此整个流程基本叙述完毕了。
 
-> *★,°*:.☆(￣▽￣)/$:*.°★* 。撒花。
+> _★,°_:.☆(￣ ▽ ￣)/\$:_.°★_ 。撒花。
 
 ### 总结
 
@@ -629,7 +625,7 @@ if (ctx.query.type === 'template') {
 
 正如尤大在推特所说：
 
-![](https://s1.ax1x.com/2020/09/11/wYguIH.png)
+![](//p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5502698906fc4a74abef3ab9ea839059~tplv-k3u1fbpfcp-zoom-1.image)
 
 这可能将时一场新的变革，它对比与`webpack`来说解决了我们在开发过程中静态打包过程，是值得我们去持续关注它的进展，伴随着`vue3`得 推出，`vite`的迭代也是飞速增长，虽然说在一定程度上还未达到能够支持大型项目的程度，但年轻的`vite`最大的优点莫过于它的潜力，虽然`vite`诞生并不久，但是它的理念在一定程度上可能更加符合开发人员的需求。
 
